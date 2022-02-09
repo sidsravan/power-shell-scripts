@@ -1,0 +1,25 @@
+$url = "https://dev.azure.com/org-name/project-name/"
+$username = "username"
+$password = "PASSOWORD"
+
+# Retrieve list of all repositories
+$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $username,$password)))
+$headers = @{
+    "Authorization" = ("Basic {0}" -f $base64AuthInfo)
+    "Accept" = "application/json"
+}
+
+Add-Type -AssemblyName System.Web
+$gitcred = ("{0}:{1}" -f  [System.Web.HttpUtility]::UrlEncode($username),$password)
+
+$resp = Invoke-WebRequest -Headers $headers -Uri ("{0}/_apis/git/repositories?api-version=1.0" -f $url)
+$json = convertFrom-JSON $resp.Content
+
+# Clone or pull all repositories
+$initpath = get-location
+$results = @()
+foreach ($entry in $json.value) { 
+    $name = $entry.name 
+    $results +=$name
+}
+$results > sreenu.csv
