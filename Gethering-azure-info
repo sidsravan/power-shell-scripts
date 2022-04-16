@@ -1,0 +1,10 @@
+Domain Name Values:
+===================
+nslookup -type=SOA kubeoncloud.com
+nslookup -type=NS kubeoncloud.com
+
+# To get Azure Tenant ID
+az account show --query "tenantId"
+
+# To get Azure Subscription ID
+az account show --query "id"
